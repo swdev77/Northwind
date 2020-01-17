@@ -179,33 +179,28 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\olimov_z\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "/Users/swdev7/.nuget/packages/": {},
+    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Coding\\ParcticalApps\\NorthwindEntitiesLib\\NorthwindEntitiesLib.csproj",
+      "projectUniqueName": "/Users/swdev7/Coding/Northwind/NorthwindEntitiesLib/NorthwindEntitiesLib.csproj",
       "projectName": "NorthwindEntitiesLib",
-      "projectPath": "D:\\Coding\\ParcticalApps\\NorthwindEntitiesLib\\NorthwindEntitiesLib.csproj",
-      "packagesPath": "C:\\Users\\olimov_z\\.nuget\\packages\\",
-      "outputPath": "D:\\Coding\\ParcticalApps\\NorthwindEntitiesLib\\obj\\",
+      "projectPath": "/Users/swdev7/Coding/Northwind/NorthwindEntitiesLib/NorthwindEntitiesLib.csproj",
+      "packagesPath": "/Users/swdev7/.nuget/packages/",
+      "outputPath": "/Users/swdev7/Coding/Northwind/NorthwindEntitiesLib/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\olimov_z\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "/Users/swdev7/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -239,7 +234,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.100/RuntimeIdentifierGraph.json"
       }
     }
   }
