@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,9 @@ namespace NorthwindWeb.Pages
     public class SupplierModel : PageModel
     {
         private Northwind db;
+
+        [BindProperty]
+        public Supplier Supplier { get; set; }
 
         public SupplierModel(Northwind injectedContext)
         {
@@ -20,6 +24,18 @@ namespace NorthwindWeb.Pages
             ViewData["Title"] = "Northwind Web Site - Suppliers.";
 
             Suppliers = db.Suppliers.Select(s => s.CompanyName);
+        }
+
+        public IActionResult OnPost()
+        {
+            if (ModelState.IsValid) 
+            {
+                db.Suppliers.Add(Supplier);
+                db.SaveChanges();
+
+                return RedirectToPage("/suppliers");
+            }
+            return Page();
         }
     }
 }

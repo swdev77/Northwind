@@ -32,13 +32,8 @@ namespace NorthwindWeb
             {
                 app.UseDeveloperExceptionPage();
             }
-            else 
-            {
-                app.UseHsts();
-            }
 
             app.UseRouting();
-            app.UseHttpsRedirection();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
