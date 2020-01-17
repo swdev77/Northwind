@@ -47,3 +47,4 @@ D:/Coding/ParcticalApps/Northwind/NorthwindWeb/obj/Debug/netcoreapp3.1/Northwind
 /Users/swdev7/Coding/Northwind/NorthwindWeb/obj/Debug/netcoreapp3.1/NorthwindWeb.dll
 /Users/swdev7/Coding/Northwind/NorthwindWeb/obj/Debug/netcoreapp3.1/NorthwindWeb.pdb
 /Users/swdev7/Coding/Northwind/NorthwindWeb/obj/Debug/netcoreapp3.1/NorthwindWeb.csproj.CopyComplete
+/Users/swdev7/Coding/Northwind/NorthwindWeb/obj/Debug/netcoreapp3.1/Razor/Pages/suppliers.cshtml.g.cs
