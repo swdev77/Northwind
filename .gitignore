@@ -1,5 +1,2 @@
-obj/
-bin/
-NorthwindContextLib/obj/
-NorthwindEntitiesLib/obj/
-NorthwindWeb/obj/
+obj/*
+bin/*
