@@ -1,0 +1,18 @@
+@page 
+@using Packt.Shared
+@model PacktFeatures.Pages.EmployeeOrdersPageModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<div class="row">
+    <h1 class="display-2">@Model.EmployeeName</h1>
+    <table class="table">
+        <tbody>
+            @foreach(Order order in Model.Orders)
+            {
+                <tr>
+                    <td>order.OrderID.ToString()</td>
+                    <td>order.OrderDate.ToString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

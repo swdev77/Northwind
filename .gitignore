@@ -1,2 +1,10 @@
-obj/*
-bin/*
+obj/
+bin/
+NorthwindWeb/obj/
+NorthwindWeb/bin/
+NorthwindEmployees/obj/
+NorthwindEmployees/bin/
+NorthwindContextLib/obj/
+NorthwindContextLib/bin/
+NorthwindEntitiesLib/obj/
+NorthwindEntitiesLib/bin/
