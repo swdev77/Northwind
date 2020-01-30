@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Packt.Shared;
+using NorthwindService.Repositories;
 
 using static System.Console;
 
@@ -56,6 +57,8 @@ namespace NorthwindService
                 .AddXmlDataContractSerializerFormatters()
                 .AddXmlSerializerFormatters()
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
+
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
