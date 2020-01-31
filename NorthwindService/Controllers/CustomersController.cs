@@ -117,7 +117,7 @@ namespace NorthwindService.Controllers
                 };
                 return BadRequest(problemDetails);
             }
-            
+
             var existing = repo.RetrieveAsync(id);
             if (existing == null)
             {

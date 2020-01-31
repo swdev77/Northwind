@@ -10,13 +10,13 @@ namespace NorthwindService.Repositories
 {
     public class CustomerRepository: ICustomerRepository
     {
-        private static ConcurrentDictionary<string, Customer> customerCache;
+        private static ConcurrentDictionary<string, Customer> customersCache;
         private readonly Northwind db;
 
         public CustomerRepository(Northwind db)
         {
             this.db = db;
-            customerCache = new ConcurrentDictionary<string, Customer>(
+            customersCache = new ConcurrentDictionary<string, Customer>(
                 db.Customers.ToDictionary(c => c.CustomerID)
             );
         }
@@ -28,7 +28,7 @@ namespace NorthwindService.Repositories
             int affected = await db.SaveChangesAsync();
             if (affected == 1)
             {
-                return customerCache.AddOrUpdate(c.CustomerID, c, UpdateCache);
+                return customersCache.AddOrUpdate(c.CustomerID, c, UpdateCache);
             }
             else
             {
@@ -39,9 +39,9 @@ namespace NorthwindService.Repositories
         private Customer UpdateCache(string id, Customer c)
         {
             Customer old;
-            if (customerCache.TryGetValue(id, out old))
+            if (customersCache.TryGetValue(id, out old))
             {
-                if(customerCache.TryUpdate(id, c, old))
+                if(customersCache.TryUpdate(id, c, old))
                 {
                     return c;
                 }
@@ -52,7 +52,6 @@ namespace NorthwindService.Repositories
         public async Task<bool?> DeleteAsync(string id)
         {
             id = id.ToUpper();
-
             Customer c = db.Customers.Find(id);
 
             db.Customers.Remove(c);
@@ -60,7 +59,7 @@ namespace NorthwindService.Repositories
 
             if (affected == 1)
             {
-                return customerCache.TryRemove(id, out c);
+                return customersCache.TryRemove(id, out c);
             }
             else 
             {
@@ -71,7 +70,7 @@ namespace NorthwindService.Repositories
         public Task<IEnumerable<Customer>> RetrieveAllAsync()
         {
             return Task.Run<IEnumerable<Customer>>(
-                () => customerCache.Values
+                () => customersCache.Values
             );
         }
 
@@ -81,7 +80,7 @@ namespace NorthwindService.Repositories
             {
                 id = id.ToUpper();
                 Customer c;
-                customerCache.TryGetValue(id, out c);
+                customersCache.TryGetValue(id, out c);
                 return c;
             });
         }
