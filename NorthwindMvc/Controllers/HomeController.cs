@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using NorthwindMvc.Models;
 using Packt.Shared;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace NorthwindMvc.Controllers
 {
@@ -15,12 +17,16 @@ namespace NorthwindMvc.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly Northwind db;
+        private readonly IHttpClientFactory clientFactory;
 
-        public HomeController(ILogger<HomeController> logger, 
-            Northwind injectedContext)
+        public HomeController(
+            ILogger<HomeController> logger, 
+            Northwind injectedContext,
+            IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
             this.db = injectedContext;
+            this.clientFactory = httpClientFactory;
         }
 
         public async Task<IActionResult> Index()
@@ -103,6 +109,29 @@ namespace NorthwindMvc.Controllers
 
             ViewData["MaxPrice"] = price.Value.ToString("C");
 
+            return View(model);
+        }
+
+        public async Task<IActionResult> Customers(string country)
+        {
+            string uri;
+            if (string.IsNullOrEmpty(country))
+            {
+                ViewData["Title"] = "All Customers Worlwide";
+                uri = "api/customers/";
+            }
+            else
+            {
+                ViewData["Title"] = $"Cutomers in {country}";
+                uri = $"api/customers/?country={country}";
+            }
+
+            var client = clientFactory.CreateClient(name: "NorthwindService");
+            var request = new HttpRequestMessage(method: HttpMethod.Get, requestUri: uri);
+            HttpResponseMessage response = await client.SendAsync(request);
+            string jsonString = await response.Content.ReadAsStringAsync();
+            IEnumerable<Customer> model = JsonConvert
+                .DeserializeObject<IEnumerable<Customer>>(jsonString);
             return View(model);
         }
     }
