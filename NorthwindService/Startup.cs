@@ -70,6 +70,8 @@ namespace NorthwindService
                 options.SwaggerDoc(name: "v1", info: new OpenApiInfo
                 {Title = "Northwind Service API", Version = "v1"});
             });
+
+            services.AddHealthChecks().AddDbContextCheck<Northwind>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -109,6 +111,8 @@ namespace NorthwindService
                     SubmitMethod.Get, SubmitMethod.Post, SubmitMethod.Put, SubmitMethod.Delete
                 });
             });
+
+            app.UseHealthChecks(path: "/howdoyoufeel");
         }
     }
 }
