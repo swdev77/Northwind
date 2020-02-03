@@ -18,6 +18,8 @@ using NorthwindService.Repositories;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 
 using static System.Console;
 
@@ -95,6 +97,21 @@ namespace NorthwindService
                     "https://localhost:5002"
                 );
             });
+
+            app.Use(next => (context) =>
+                {
+                    var endpoint = context.GetEndpoint();
+                    if (endpoint != null)
+                    {
+                        WriteLine("*** Name: {0}; Route: {1}; Metadat: {2}",
+                            arg0: endpoint.DisplayName,
+                            arg1: (endpoint as RouteEndpoint)?.RoutePattern,
+                            arg2: string.Join(", ", endpoint.Metadata)
+                        );
+                    }
+                    return next(context);
+                }
+            );
 
             app.UseEndpoints(endpoints =>
             {
