@@ -15,6 +15,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Packt.Shared;
 using NorthwindService.Repositories;
+using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using Microsoft.OpenApi.Models;
 
 using static System.Console;
 
@@ -59,6 +62,12 @@ namespace NorthwindService
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+
+            services.AddSwaggerGen(options => 
+            {
+                options.SwaggerDoc(name: "v1", info: new OpenApiInfo
+                {Title = "Northwind Service API", Version = "v1"});
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,6 +87,17 @@ namespace NorthwindService
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json",
+                    "Northwind Service API Version 1");
+                options.SupportedSubmitMethods(new[]
+                {
+                    SubmitMethod.Get, SubmitMethod.Post, SubmitMethod.Put, SubmitMethod.Delete
+                });
             });
         }
     }
