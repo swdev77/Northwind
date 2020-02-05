@@ -82,7 +82,7 @@ namespace NorthwindML.Controllers
                         from lineItem1 in o.OrderDetails
                         from lineItem2 in o.OrderDetails
                         select new ProductCobought{
-                            ProductID = (unit)lineItem1.ProductID,
+                            ProductID = (uint)lineItem1.ProductID,
                             CoboughtProductID = (uint)lineItem2.ProductID
                         })
                         .Where(p => p.ProductID != p.CoboughtProductID)
@@ -103,6 +103,68 @@ namespace NorthwindML.Controllers
                 datasetFile.Close();
             }
             var model = CreateHomeIndexViewModel();
+            return View("Index", model);
+        }
+
+        public IActionResult TrainModels()
+        {
+            var stopWatch = Stopwatch.StartNew();
+            foreach (string country in countries)
+            {
+                var mlContext = new MLContext();
+                IDataView dataView = mlContext.Data.LoadFromTextFile(
+                    path: GetDataPath($"{country}-{datasetName}"),
+                    columns: new[]
+                    {
+                        new TextLoader.Column(
+                            name:       "Label",
+                            dataKind:   DataKind.Double,
+                            index:      0
+                        ),
+                        new TextLoader.Column(
+                            name:       nameof(ProductCobought.ProductID),
+                            dataKind:   DataKind.UInt32,
+                            source:     new [] { new TextLoader.Range(0)},
+                            keyCount:   new KeyCount(77)
+                        ),
+                        new TextLoader.Column(
+                            name:       nameof(ProductCobought.CoboughtProductID),
+                            dataKind:   DataKind.UInt32,
+                            source:     new [] { new TextLoader.Range(1) },
+                            keyCount:   new KeyCount(77)
+                        )
+                    },
+                    hasHeader: true,
+                    separatorChar: '\t'
+                );
+
+                var options = new MatrixFactorizationTrainer.Options 
+                {
+                    MatrixColumnIndexColumnName = nameof(ProductCobought.ProductID),
+                    MatrixRowIndexColumnName = nameof(ProductCobought.CoboughtProductID),
+                    LabelColumnName = "Label",
+                    LossFunction = MatrixFactorizationTrainer.LossFunctionType.SquareLossOneClass,
+                    Alpha = 0.01,
+                    Lambda = 0.025,
+                    C = 0.00001
+                };
+
+                MatrixFactorizationTrainer mft = 
+                    mlContext.Recommendation().Trainers.MatrixFactorization(options);
+                
+                ITransformer trainedModel = mft.Fit(dataView);
+
+                mlContext.Model.Save(trainedModel, 
+                    inputSchema: dataView.Schema,
+                    filePath: GetDataPath($"{country}-model.zip"));
+            }
+
+            stopWatch.Stop();
+
+            var model = CreateHomeIndexViewModel();
+
+            model.Milliseconds = stopWatch.ElapsedMilliseconds;
+
             return View("Index", model);
         }
 
