@@ -168,6 +168,100 @@ namespace NorthwindML.Controllers
             return View("Index", model);
         }
 
+        public IActionResult Cart(int? id)
+        {
+            string cartCookie = Request.Cookies["nw_cart"] ?? string.Empty;
+
+            if(id.HasValue)
+            {
+                if(string.IsNullOrWhiteSpace(cartCookie))
+                {
+                    cartCookie = id.ToString();
+                }
+                else 
+                {
+                    string[] ids = cartCookie.Split('-');
+                    if (!ids.Contains(id.ToString()))
+                    {
+                        cartCookie = string.Join('-',
+                            cartCookie, id.ToString());
+                    }
+                }
+            }
+
+            Response.Cookies.Append("nw_cart", cartCookie);
+
+            var model = new HomeCartViewModel
+            {
+                Cart = new Cart 
+                {
+                    Items = Enumerable.Empty<CartItem>()
+                },
+                Recommendations = new List<EnrichedRecommendation>()
+            };
+
+            if (cartCookie.Length > 0)
+            {
+                model.Cart.Items = cartCookie.Split('-').Select(item => 
+                new CartItem{
+                    ProductID = int.Parse(item),
+                    ProductName = db.Products.Find(int.Parse(item)).ProductName
+                });
+            }
+
+            if (System.IO.File.Exists(GetDataPath("germany-model.zip")))
+            {
+                var mlContext = new MLContext();
+
+                ITransformer modelCermany;
+
+                using (var stream = new FileStream(
+                    path:   GetDataPath("germany-model.zip"),
+                    mode:   FileMode.Open,
+                    access: FileAccess.Read,
+                    share:  FileShare.Read))
+                {
+                    modelCermany = mlContext.Model.Load(stream, out DataViewSchema shcema);
+                }
+
+                var predictionEngine = 
+                    mlContext.Model
+                        .CreatePredictionEngine<ProductCobought, Recommendation>(modelCermany);
+                var products = db.Products.ToArray();
+
+                foreach (var item in model.Cart.Items)
+                {
+                    var topThree = products
+                        .Select(product => 
+                            predictionEngine.Predict(
+                                new ProductCobought 
+                                {
+                                    ProductID = (uint)item.ProductID,
+                                    CoboughtProductID = (uint)product.ProductID
+                                })
+                        )
+                        .OrderByDescending(x => x.Score)
+                        .Take(3)
+                        .ToArray();
+
+                    model.Recommendations.AddRange(
+                        topThree.Select(rec => new EnrichedRecommendation
+                        {
+                            CoboughtProductID = rec.CoboughtProductID,
+                            Score = rec.Score,
+                            ProductName = db.Products.Find(
+                                (int)rec.CoboughtProductID).ProductName    
+                        }));
+                }
+
+                model.Recommendations = model.Recommendations
+                    .OrderByDescending(r => r.Score)
+                    .Take(3)
+                    .ToList();
+            }
+             return View(model);
+        }
+
         public IActionResult Privacy()
         {
             return View();
