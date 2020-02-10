@@ -60,5 +60,32 @@
                 Text="{Binding ElementName=markdownSource, Path=Text}"
                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
         </StackPanel>
+        <TextBlock Grid.ColumnSpan="2" Margin="10">
+            Use the slider to rotate the square:
+        </TextBlock>
+        <Slider Value="180" Minimum="0" Maximum="360"
+                Name="sliderRotation" Margin="10,0"></Slider>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center">
+                <TextBlock FontSize="30" 
+                           Text="{Binding ElementName=sliderRotation, Path=Value}"></TextBlock>
+                <TextBlock Text="degrees" FontSize="30" Margin="10,0"></TextBlock>
+            </StackPanel>
+            <kit:RadialGauge Grid.Column="1" Minimum="0" Maximum="360"
+                             Height="200" Width="200"
+                             Value="{Binding ElementName=sliderRotation, Path=Value}"></kit:RadialGauge>
+            <Rectangle Grid.Column="2" Height="100" Width="100" Fill="Red">
+                <Rectangle.RenderTransform>
+                    <RotateTransform Angle="{Binding ElementName=sliderRotation, Path=Value}"></RotateTransform>
+                </Rectangle.RenderTransform>
+            </Rectangle>
+        </Grid>
     </StackPanel>
 </Page>
