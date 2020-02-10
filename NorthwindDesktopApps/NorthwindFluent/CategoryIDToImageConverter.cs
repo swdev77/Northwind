@@ -15,7 +15,7 @@ namespace NorthwindFluent
         {
             int number = (int) value;
             string path = string.Format(
-                format: "{0}/Assests/category{1}-small.jpeg",
+                format: "{0}/Assets/category{1}-small.jpeg",
                 arg0: Environment.CurrentDirectory,
                 arg1: number);
             var image = new BitmapImage(new Uri(path));
