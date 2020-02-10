@@ -12,7 +12,7 @@
 
     <StackPanel
         Background="{ThemeResource SystemControlAcrylicWindowBrush}">
-        <StackPanel Orientation="Horizontal" Padding="4" Background="LightGray" Name="toolbar">
+        <StackPanel Orientation="Horizontal" Padding="4" Background="{StaticResource rainbow}" Name="toolbar">
             <Button Margin="6" Padding="6" Name="ClickMeButton"
                     Click="ClickMeButton_OnClick">
                 Click Me
